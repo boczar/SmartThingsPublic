@@ -4,10 +4,11 @@ definition(
     author: "Alexander Boczar",
     description: "UniFi Protect",
     iconUrl: "https://prd-www-cdn.ubnt.com/media/images/productgroup/unifi-cloud-key-gen2/usg-g2-small.png",
-    iconX2Url: "",
-    iconX3Url: "",
     oauth: true,
     usesThirdPartyAuthentication: true)
+    {
+        appSettings "clientId"
+    }
 
 
 preferences {
@@ -32,16 +33,27 @@ def oauthInit()
 def oauthCallback()
 {
     log.info "oauthCallback()"
-
-  
 }
 
 def oathReceiveToken(redirectUrl = null)
 {
     log.info "oathReceiveToken()"
-    
 }
 
+def oauthSuccess()
+{
+    log.info "oauthSuccess()"
+}
+
+def oauthFailure()
+{
+    log.info "oauthFailure()"
+}
+
+def oauthConnectionStatus(message, redirectUrl = null) 
+{
+    log.info "oauthConnectionStatus(message: ${message}, redirectUrl: ${redirectUrl})"
+}
 
 mappings {
     path("/oauth/initialize") { action: [GET: "oauthInitUrl"]}
