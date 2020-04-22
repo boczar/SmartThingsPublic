@@ -21,15 +21,15 @@ definition(
     category: "My Apps",
     iconUrl: "https://prd-www-cdn.ubnt.com/media/images/productgroup/unifi-cloud-key-gen2/usg-g2-small.png",
     iconX2Url: "https://prd-www-cdn.ubnt.com/media/images/productgroup/unifi-cloud-key-gen2/usg-g2-small.png",
-    iconX3Url: "https://prd-www-cdn.ubnt.com/media/images/productgroup/unifi-cloud-key-gen2/usg-g2-small.png") {
+    iconX3Url: "https://prd-www-cdn.ubnt.com/media/images/productgroup/unifi-cloud-key-gen2/usg-g2-small.png",
+    oauth: true,
+    usesThirdPartyAuthentication: true) {
     appSetting "clientId"
 }
 
 
 preferences {
-	section("Title") {
-		// TODO: put inputs here
-	}
+	section(name: "Credentials", title: "Ubiquiti", context: "authPage", install: true)
 }
 
 def installed() {
@@ -47,6 +47,12 @@ def updated() {
 
 def initialize() {
 	// TODO: subscribe to attributes, devices, locations, etc.
+}
+
+def oauthInit() {
+    def oauthParams = [client_id: "${appSettings.clientId}", scope: "read", response_type: "token" ]
+    log.debug("Redirecting user to OAuth setup")
+    redirect(location: "https://account.ui.com/login?${toQueryString(oauthParams)}")
 }
 
 // TODO: implement event handlers
