@@ -1,129 +1,102 @@
+/**
+ *  Unifi Camera
+ *
+ *  Copyright 2020 Alexander Boczar
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ */
 metadata {
-    definition (name: "UniFi Camera G3", namespace: "unifi", author: "Alexander Boczar") {
-        capability "Motion Sensor"
-        capability "Sensor"
-        capability "Refresh"
-        capability "Image Capture"
-    }
-    
-    simulator {
-        
-    }
-    
-    tiles( scale: 2 ) {
-        carouselTile("cameraSnapshot", "device.image", width: 6, height: 4) { }
-        
-        standardTile("take", "device.image", width: 2, height: 2, canChangeIcon: false, inactiveLabel: true, canChangeBackground: false) {
-            state "take", label: "Take", action: "Image Capture.take", icon: "st.camera.camera", backgroundColor: "#FFFFFF", nextState:"taking"
-            state "taking", label:'Taking', action: "", icon: "st.camera.take-photo", backgroundColor: "#53a7c0"
-            state "image", label: "Take", action: "Image Capture.take", icon: "st.camera.camera", backgroundColor: "#FFFFFF", nextState:"taking"
-        }
-        
-        standardTile("motion", "device.motion", width: 2, height: 2) {
-            state("active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#53a7c0")
-            state("inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff")
-        }
-        
-        standardTile( "connectionStatus", "device.connectionStatus", width: 2, height: 2 ) {
-            state( "CONNECTED", label: "Connected", icon: "st.samsung.da.RC_ic_power", backgroundColor: "#79b821" )
-            state( "DISCONNECTED", label: "Disconnected", icon: "st.samsung.da.RC_ic_power", backgroundColor: "#ffffff" )
-        }
-        
-        main( "motion" )
-        details( "cameraSnapshot", "take", "motion", "connectionStatus" )
-    }
-    
-    preferences {
-        input "pollInterval", "number", title: "Poll Interval", description: "Polling interval in seconds for motion detection", defaultValue: 5
-        input "snapOnMotion", "bool", title: "Snapshot on motion", description: "If enabled, take a snapshot when the camera detects motion", defaultValue: false
-    }
+	definition (name: "Unifi Camera", namespace: "boczar", author: "Alexander Boczar", cstHandler: true) {
+		capability "Image Capture"
+		capability "Motion Sensor"
+		capability "Video Camera"
+		capability "Video Capture"
+		capability "Video Clips"
+		capability "Video Stream"
+	}
+
+
+	simulator {
+		// TODO: define status and reply messages here
+	}
+
+	tiles {
+		// TODO: define your main and details tiles here
+	}
 }
 
-/**
- * installed()
- *
- * Called by ST platform.
- */
-def installed()
-{
-    log.info "installed()"
+// parse events into attributes
+def parse(String description) {
+	log.debug "Parsing '${description}'"
+	// TODO: handle 'image' attribute
+	// TODO: handle 'captureTime' attribute
+	// TODO: handle 'captureTime' attribute
+	// TODO: handle 'motion' attribute
+	// TODO: handle 'camera' attribute
+	// TODO: handle 'statusMessage' attribute
+	// TODO: handle 'mute' attribute
+	// TODO: handle 'settings' attribute
+	// TODO: handle 'clip' attribute
+	// TODO: handle 'stream' attribute
+	// TODO: handle 'videoClip' attribute
+	// TODO: handle 'stream' attribute
 
-    updated()
 }
 
-/**
- * updated()
- *
- * Called by ST platform.
- */
-def updated()
-{
-    log.info "updated()"
-
-    // Unschedule here to remove any zombie runIn calls that the platform
-    // seems to keep around even if the code changes during dev
-    unschedule()
-    
-    state.name                   = getDataValue( "name" )
-    state.id                     = getDataValue( "id" )
-    state.lastMotion             = null
-    state.motion                 = "uninitialized"
-    state.connectionStatus       = "uninitialized"
-    state.pollInterval           = settings.pollInterval ? settings.pollInterval : 5
-    state.pollIsActive           = false
-    state.successiveApiFails     = 0
-    state.lastPoll               = new Date().time
-    
-    log.info "${device.displayName} updated with state: ${state}"
-    
-    runEvery1Minute( nvr_cameraPollWatchdog )
+// handle commands
+def take() {
+	log.debug "Executing 'take'"
+	// TODO: handle 'take' command
 }
 
-/**
- * refresh()
- * 
- * Called by ST platform, part of "Refresh" capability.  Usually only called when the user explicitly
- * refreshes the device details pane.
- */
-def refresh()
-{
-    log.info "refresh()"
-
-    _sendMotion( state.motion )
-    _sendConnectionStatus( state.connectionStatus )
+def on() {
+	log.debug "Executing 'on'"
+	// TODO: handle 'on' command
 }
 
-/**
- * take()
- *
- * Called by ST platform, part of "Image Capture" capability.
- */
-def take()
-{
-    log.info "take()"
-
-    def key = parent._getApiKey()
-    def target = parent._getNvrTarget()
-    
-    if( state.connectionStatus == "CONNECTED" )
-    {
-        hubAction = new physicalgraph.device.HubAction(
-            [
-                path: "/api/cameras/${state.id}/snapshot/?w=640&h=360",
-                method: "GET",
-                HOST: target,
-                headers: [
-                    "Host":"${target}",
-                    "Accept":"*/*",
-                    "Authorization":"Bearer ${key}"
-                ]        
-            ],
-            [
-                outputMsgToS3: true,
-            ]
-        );
-    
-        hubAction
-    }
+def off() {
+	log.debug "Executing 'off'"
+	// TODO: handle 'off' command
 }
 
+def mute() {
+	log.debug "Executing 'mute'"
+	// TODO: handle 'mute' command
+}
+
+def unmute() {
+	log.debug "Executing 'unmute'"
+	// TODO: handle 'unmute' command
+}
+
+def flip() {
+	log.debug "Executing 'flip'"
+	// TODO: handle 'flip' command
+}
+
+def capture() {
+	log.debug "Executing 'capture'"
+	// TODO: handle 'capture' command
+}
+
+def captureClip() {
+	log.debug "Executing 'captureClip'"
+	// TODO: handle 'captureClip' command
+}
+
+def startStream() {
+	log.debug "Executing 'startStream'"
+	// TODO: handle 'startStream' command
+}
+
+def stopStream() {
+	log.debug "Executing 'stopStream'"
+	// TODO: handle 'stopStream' command
+}
